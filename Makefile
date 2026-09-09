@@ -1,5 +1,5 @@
 PYTHON ?= python3
-.PHONY: help setup sim pnr artifacts doctor check
+.PHONY: help setup sim pnr pnr-standalone artifacts doctor check
 help:
 	@echo 'V0: make setup, make sim, make pnr, make artifacts, make doctor'
 setup:
@@ -8,6 +8,8 @@ sim:
 	$(PYTHON) scripts/v0.py sim
 pnr:
 	$(PYTHON) scripts/v0.py pnr
+pnr-standalone:
+	$(PYTHON) scripts/v0.py pnr-standalone
 artifacts:
 	$(PYTHON) scripts/v0.py artifacts
 doctor:

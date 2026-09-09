@@ -26,7 +26,7 @@ def container(args, image=None):
                 'exec "$@"', "v0", *args])
 
 
-def prepare(target=None):
+def prepare(target=None, standalone=False):
     source = ROOT / "Backend/openlane"
     target = target or BUILD / "design"
     target.mkdir(parents=True, exist_ok=True)
@@ -36,6 +36,13 @@ def prepare(target=None):
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
             shutil.copy2(src, dst)
+    config = json.loads((target / "config.json").read_text())
+    config.update(json.loads((ROOT / "physical/librelane/v0-overrides.json").read_text()))
+    if standalone:
+        config.update(json.loads((ROOT / "physical/librelane/standalone-overrides.json").read_text()))
+    (target / "config.json").write_text(json.dumps(config, indent=2) + "\n")
+    if standalone:
+        return target
     floorplan = BUILD / "inputs/project_macro.def"
     if not floorplan.exists():
         floorplan.parent.mkdir(parents=True, exist_ok=True)
@@ -51,9 +58,6 @@ def prepare(target=None):
         raise RuntimeError("DEF input checksum mismatch; remove build/inputs/project_macro.def and retry")
     (target / "fixed_dont_change").mkdir(exist_ok=True)
     shutil.copy2(floorplan, target / "fixed_dont_change/project_macro.def")
-    config = json.loads((target / "config.json").read_text())
-    config.update(json.loads((ROOT / "physical/librelane/v0-overrides.json").read_text()))
-    (target / "config.json").write_text(json.dumps(config, indent=2) + "\n")
     return target
 
 
@@ -94,11 +98,12 @@ def main():
     elif command == "sim":
         run(["docker", "build", "-f", "Dockerfile.sim", "-t", LOCK["sim_image"], "."])
         container(["python3", "scripts/sim.py"], image=LOCK["sim_image"])
-    elif command == "pnr":
+    elif command in {"pnr", "pnr-standalone"}:
         (BUILD / "pnr-success.json").unlink(missing_ok=True)
         (BUILD / "artifacts.json").unlink(missing_ok=True)
-        tag = "v0-" + time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1000000:06d}"
-        target = prepare(BUILD / "attempts" / tag)
+        standalone = command == "pnr-standalone"
+        tag = ("standalone-" if standalone else "v0-") + time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1000000:06d}"
+        target = prepare(BUILD / "attempts" / tag, standalone=standalone)
         manifest = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()
                     for p in sorted(target.rglob("*")) if p.is_file()}
         (target / "input-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
