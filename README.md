@@ -1,3 +1,5 @@
+> **Tiny Transformer NPU V0 fork:** [Reproduction guide](docs/V0.md) · [Validation status](docs/VALIDATION.md). The upstream description below is preserved; its 8×8 claim differs from the checked-in 4×4 physical RTL.
+
 # nanoNPU: Minimal Systolic Neural Inference Engine for Medical Edge AI
 
 <p align="center">

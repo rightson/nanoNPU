@@ -1,0 +1,15 @@
+{
+  "upstream_url": "https://github.com/Ammar-Wahidi/NPU",
+  "upstream_commit": "f876e8e236aed42e3ca4627ca8e43f8d44f1a086",
+  "image": "ghcr.io/librelane/librelane@sha256:ecabd075d0ddf6a2bd1cd4a32109c7dbb861ec007f7e4e423a9a081f8d23b8e2",
+  "sim_image": "tiny-transformer-npu-sim:librelane-3.0.5",
+  "open_pdks_revision": "8afc8346a57fe1ab7934ba5a6056ea8b43078e71",
+  "librelane_version": "3.0.5",
+  "def_sha256": "f00e4a4a8234c49eb509dc6996cf46fb1565706eb169a4dc028ac283282874be",
+  "def_size": 2407774,
+  "design": "npu_project_macro",
+  "array_size": 4,
+  "dmem_words": 64,
+  "pdk": "sky130A",
+  "scl": "sky130_fd_sc_hd"
+}
