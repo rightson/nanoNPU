@@ -36,6 +36,12 @@ def prepare(target=None, standalone=False):
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
             shutil.copy2(src, dst)
+    # The external UART signal terminates at rx_sync1, the first of two
+    # synchronizer registers. Apply the same precise exception in both modes.
+    uart_sdc = (ROOT / "constraints/uart_async.sdc").read_text()
+    for name in ["pnr.sdc", "signoff.sdc"]:
+        path = target / name
+        path.write_text(path.read_text() + "\n" + uart_sdc)
     config = json.loads((target / "config.json").read_text())
     config.update(json.loads((ROOT / "physical/librelane/v0-overrides.json").read_text()))
     if standalone:

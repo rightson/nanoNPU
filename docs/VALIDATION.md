@@ -61,14 +61,39 @@ to 1,750 × 1,750 µm. Placement reports 22.218% utilization, compared with
 checkout, produce the same synthesis netlist SHA-256, 50,042 cells and
 576,764.4128 µm² cell area. This confirms the floorplan comparison uses the
 same synthesized logic; it does not establish final physical equivalence
-or signoff. Detailed routing reached zero routing DRC. Its nine-corner
+or signoff. Detailed routing reached zero routing DRC and zero antenna errors.
+Magic DRC, KLayout DRC and Netgen LVS all passed with zero errors. Its nine-corner
 post-route STA found no setup violations, but the input path from
-`gpio_bot_in[0]` has hold violations at the three slow PVT/extraction corners
+`gpio_bot_in[0]` was reported with hold violations at the three slow PVT/extraction corners
 (worst −0.273445 ns). There are also one max-cap and 15 max-slew violations
 in the worst corner. These results do not satisfy the V0 acceptance gate.
 
-The standalone configuration is now the default `make pnr`, with
-post-global-route timing repair and 0.5 ns hold repair margin added. Original
-SDC timing requirements remain unchanged. `STA_THREADS=2` limits concurrent
-STA memory use. A new clean-checkout full run is required for this change.
-The original geometry remains available as `make pnr-openframe`.
+The standalone configuration is now the default `make pnr`.
+`STA_THREADS=2` limits concurrent STA memory use. The original geometry
+remains available as `make pnr-openframe`.
+
+## UART clock-domain correction
+
+A clean checkout of `cb64487` passed eight checks and 72/72 simulation words.
+Its physical run `standalone-20260910-015256-807000` tried a global 0.5 ns
+hold-repair margin. This added over 5,000 buffers and was deliberately stopped
+after structural inspection identified a constraint-modeling error. No output
+from this experiment is accepted as a completed physical implementation.
+
+The failed endpoint `_92312_/D` in the first standalone routed netlist belongs
+to `u_npu_sys.u_uart_apb.u_bridge.u_uart_rx.rx_sync1`, the first register of
+the existing two-register UART synchronizer. UART RX has no fixed clock phase.
+`constraints/uart_async.sdc` therefore excepts only the external pin to that
+first D pin, using a retained RTL net name to resolve the register. Both PNR
+and signoff snapshots use this exception. Global hold-margin overrepair is
+removed; the original clock, other I/O requirements and internal register
+paths remain constrained.
+
+An OpenROAD check against the original routed ODB and maximum-RC SPEF at
+`ss_100C_1v60` reproduced the −0.273445 ns path before the exception, found
+no timed path from the UART port to the first D pin afterward, and asserted
+that the synchronizer's internal path remains timed. Its internal hold slack
+was +2.194736 ns and setup slack +46.063087 ns in that check. See
+[`evidence/uart-async-constraint-check.log`](evidence/uart-async-constraint-check.log).
+This establishes the exception's scope, not metastability MTBF or complete CDC
+signoff. A fresh complete flow is still required for the corrected constraints.

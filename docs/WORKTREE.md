@@ -32,6 +32,7 @@ The nested clean physical checkout must be removed before its parent:
 v0_worktree="$PWD/tiny-transformer-npu-v0-20260909b"
 git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-physical-checkout"
 git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-standalone-checkout"
+git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-uart-checkout"
 git -C tiny-transformer-npu worktree remove --force "$v0_worktree"
 git -C tiny-transformer-npu branch -d codex/v0-reproduce-20260909b
 ```

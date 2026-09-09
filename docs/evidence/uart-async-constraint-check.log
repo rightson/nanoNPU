@@ -1,0 +1,103 @@
+OpenROAD dcf36133a369abc8f3c5e5738cd4d82e4903c0e0 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO]: Setting clock latency range: 0.32 : 4.48
+[INFO]: Setting max input delay to: 8.90
+[INFO]: Setting min input delay to: 5.20
+[INFO]: Setting max output delay to: 31.71
+[INFO]: Setting min output delay to: 24.72
+BEFORE_UART_EXCEPTION
+Startpoint: gpio_bot_in[0] (input port clocked by clk)
+Endpoint: _92312_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock clk (rise edge)
+   0.320000    0.320000   clock network delay (propagated)
+   5.200000    5.520000 v input external delay
+   0.000000    5.520000 v gpio_bot_in[0] (in)
+   1.048484    6.568484 v hold8691/X (sky130_fd_sc_hd__dlygate4sd3_1)
+   0.871728    7.440213 v input1/X (sky130_fd_sc_hd__clkdlybuf4s25_1)
+   0.013948    7.454160 v _92312_/D (sky130_fd_sc_hd__dfstp_2)
+               7.454160   data arrival time
+
+   0.000000    0.000000   clock clk (rise edge)
+   7.738676    7.738676   clock network delay (propagated)
+   0.100000    7.838675   clock uncertainty
+   0.000000    7.838675   clock reconvergence pessimism
+               7.838675 ^ _92312_/CLK (sky130_fd_sc_hd__dfstp_2)
+  -0.111070    7.727605   library hold time
+               7.727605   data required time
+-----------------------------------------------------------------
+               7.727605   data required time
+              -7.454160   data arrival time
+-----------------------------------------------------------------
+              -0.273445   slack (VIOLATED)
+
+
+UART async exception: gpio_bot_in[0] -> _92312_/D
+AFTER_UART_EXCEPTION
+No paths found.
+SYNCHRONIZER_INTERNAL_PATH_STILL_TIMED
+Startpoint: _92312_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: _92311_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock clk (rise edge)
+   3.123922    3.123922   clock network delay (propagated)
+   0.000000    3.123922 ^ _92312_/CLK (sky130_fd_sc_hd__dfstp_2)
+   0.856833    3.980755 v _92312_/Q (sky130_fd_sc_hd__dfstp_2)
+   1.582066    5.562820 v hold8718/X (sky130_fd_sc_hd__dlygate4sd3_1)
+   0.004627    5.567448 v _92311_/D (sky130_fd_sc_hd__dfstp_2)
+               5.567448   data arrival time
+
+   0.000000    0.000000   clock clk (rise edge)
+   7.778718    7.778718   clock network delay (propagated)
+   0.100000    7.878718   clock uncertainty
+  -4.418541    3.460177   clock reconvergence pessimism
+               3.460177 ^ _92311_/CLK (sky130_fd_sc_hd__dfstp_2)
+  -0.087466    3.372711   library hold time
+               3.372711   data required time
+-----------------------------------------------------------------
+               3.372711   data required time
+              -5.567448   data arrival time
+-----------------------------------------------------------------
+               2.194736   slack (MET)
+
+
+Startpoint: _92312_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: _92311_ (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock clk (rise edge)
+   7.738676    7.738676   clock network delay (propagated)
+   0.000000    7.738676 ^ _92312_/CLK (sky130_fd_sc_hd__dfstp_2)
+   1.526624    9.265300 ^ _92312_/Q (sky130_fd_sc_hd__dfstp_2)
+   1.855083   11.120383 ^ hold8718/X (sky130_fd_sc_hd__dlygate4sd3_1)
+   0.005149   11.125532 ^ _92311_/D (sky130_fd_sc_hd__dfstp_2)
+              11.125532   data arrival time
+
+  50.000000   50.000000   clock clk (rise edge)
+   3.160154   53.160152   clock network delay (propagated)
+  -0.100000   53.060154   clock uncertainty
+   4.418541   57.478695   clock reconvergence pessimism
+              57.478695 ^ _92311_/CLK (sky130_fd_sc_hd__dfstp_2)
+  -0.290077   57.188622   library setup time
+              57.188622   data required time
+-----------------------------------------------------------------
+              57.188622   data required time
+             -11.125532   data arrival time
+-----------------------------------------------------------------
+              46.063087   slack (MET)
+
+
+UART_CONSTRAINT_CHECK_PASSED
