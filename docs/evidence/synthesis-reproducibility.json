@@ -10,5 +10,17 @@
     "netlist_sha256": "d87df22b3d84a83f494c4022ecf3f54749e9b8ee578b5e027a299cf85d8a0925",
     "cells": 50042,
     "cell_area_um2": 576764.4128
+  },
+  {
+    "run": "standalone-20260910-012100-744000",
+    "netlist_sha256": "d87df22b3d84a83f494c4022ecf3f54749e9b8ee578b5e027a299cf85d8a0925",
+    "cells": 50042,
+    "cell_area_um2": 576764.4128
+  },
+  {
+    "run": "standalone-20260910-023402-179000",
+    "netlist_sha256": "d87df22b3d84a83f494c4022ecf3f54749e9b8ee578b5e027a299cf85d8a0925",
+    "cells": 50042,
+    "cell_area_um2": 576764.4128
   }
 ]

@@ -31,9 +31,9 @@ module tb_npu_system_4x4;
 // ================================================================
 //  Parameters & Globals
 // ================================================================
-localparam SA_SIZE    = 4;          
+localparam SA_SIZE    = 4;
 localparam DATA_W     = 8;
-localparam SRAM_AW    = 6;         
+localparam SRAM_AW    = 6;
 localparam CLK_PERIOD = 10;
 localparam DIV        = 16'd4;
 localparam BIT_CLKS   = DIV * 16;
@@ -50,9 +50,9 @@ always #(CLK_PERIOD/2) clk = ~clk;
 integer pass_cnt = 0, fail_cnt = 0;
 
 // ── Global test data arrays — all 4×4 now ─────────────────────
-logic [7:0]         test_act  [0:3][0:3];   
-logic [7:0]         test_wgt  [0:3][0:3];   
-logic signed [31:0] test_bias [0:3];         
+logic [7:0]         test_act  [0:3][0:3];
+logic [7:0]         test_wgt  [0:3][0:3];
+logic signed [31:0] test_bias [0:3];
 logic [31:0]        test_m0;
 logic [4:0]         test_n_sc;
 
@@ -63,7 +63,7 @@ npu_system_top #(
     .DEFAULT_DIVISOR (DIV),
     .SA_SIZE         (SA_SIZE),
     .DATA_W          (DATA_W),
-    .SRAM_ADDR_W     (SRAM_AW)     
+    .SRAM_ADDR_W     (SRAM_AW)
 ) dut (
     .clk(clk), .rst_n(rst_n), .uart_rx(uart_rx), .uart_tx(uart_tx),
     .locked(locked), .npu_done(npu_done), .done_processing(done_processing)
@@ -131,8 +131,8 @@ task automatic write_dmem_word(input [6:0] word_addr, input [31:0] data);
 endtask
 
 task automatic read_dmem_word(input [6:0] word_addr, output [31:0] rdata);
-    apb_write(32'h0000_0008, {25'b0, word_addr});   
-    apb_read (32'h0000_000C, rdata);                
+    apb_write(32'h0000_0008, {25'b0, word_addr});
+    apb_read (32'h0000_000C, rdata);
 endtask
 
 task automatic host_load_mode(); apb_write(32'h0000_0000, 32'h6); endtask
@@ -158,11 +158,11 @@ task automatic do_reset();
 endtask
 
 // ================================================================
-//  Random & Constant Data Generators 
+//  Random & Constant Data Generators
 // ================================================================
 task automatic gen_random_tile(
     input integer min_v, input integer max_v,
-    ref logic [7:0] tile[0:3][0:3]     
+    ref logic [7:0] tile[0:3][0:3]
 );
     integer r, c, val;
     begin
@@ -177,7 +177,7 @@ endtask
 
 task automatic gen_random_bias(
     input integer min_v, input integer max_v,
-    ref logic signed [31:0] bias[0:3]   
+    ref logic signed [31:0] bias[0:3]
 );
     integer c, val;
     begin
@@ -189,7 +189,7 @@ task automatic gen_random_bias(
 endtask
 
 task automatic fill_tile(
-    input [7:0] val, 
+    input [7:0] val,
     ref logic [7:0] tile[0:3][0:3]
 );
     integer r, c;
@@ -203,7 +203,7 @@ task automatic fill_tile(
 endtask
 
 task automatic fill_bias(
-    input signed [31:0] val, 
+    input signed [31:0] val,
     ref logic signed [31:0] bias[0:3]
 );
     integer c;
@@ -211,8 +211,8 @@ task automatic fill_bias(
 endtask
 
 task automatic write_tile_to_sram(
-    input [6:0] base_addr,              
-    ref logic [7:0] tile[0:3][0:3]      
+    input [6:0] base_addr,
+    ref logic [7:0] tile[0:3][0:3]
 );
     integer r;
     begin
@@ -227,7 +227,7 @@ endtask
 
 task automatic write_bias_to_sram(
     input [6:0] base_addr,
-    ref logic signed [31:0] bias[0:3]   
+    ref logic signed [31:0] bias[0:3]
 );
     integer c;
     for (c = 0; c < SA_SIZE; c++)
@@ -257,21 +257,21 @@ localparam [6:0] ADDR_OUT   = 7'h10;
 
 task automatic program_pipeline(input bit use_relu, input [4:0] shift);
     begin
-        write_imem_word(5'd0, enc_load(6'b000000, ADDR_ACT));    
-        write_imem_word(5'd1, enc_load(6'b000001, ADDR_WGT));    
-        write_imem_word(5'd2, enc_load(6'b000010, ADDR_BIAS));   
-        write_imem_word(5'd3, enc_load(6'b000011, ADDR_SCALE));  
-        write_imem_word(5'd4, enc_comp(6'b000100, shift));        
-        write_imem_word(5'd5, enc_comp(6'b000101, 5'd0));        
-        write_imem_word(5'd6, enc_comp(6'b000110, shift));       
+        write_imem_word(5'd0, enc_load(6'b000000, ADDR_ACT));
+        write_imem_word(5'd1, enc_load(6'b000001, ADDR_WGT));
+        write_imem_word(5'd2, enc_load(6'b000010, ADDR_BIAS));
+        write_imem_word(5'd3, enc_load(6'b000011, ADDR_SCALE));
+        write_imem_word(5'd4, enc_comp(6'b000100, shift));
+        write_imem_word(5'd5, enc_comp(6'b000101, 5'd0));
+        write_imem_word(5'd6, enc_comp(6'b000110, shift));
         if (use_relu) begin
-            write_imem_word(5'd7, enc_comp(6'b000111, 5'd0));    
-            write_imem_word(5'd8, enc_store(4'b0001, ADDR_OUT)); 
+            write_imem_word(5'd7, enc_comp(6'b000111, 5'd0));
+            write_imem_word(5'd8, enc_store(4'b0001, ADDR_OUT));
         end else begin
-            write_imem_word(5'd7, {6'b111110, 26'd0});           
-            write_imem_word(5'd8, enc_store(4'b0000, ADDR_OUT)); 
+            write_imem_word(5'd7, {6'b111110, 26'd0});
+            write_imem_word(5'd8, enc_store(4'b0000, ADDR_OUT));
         end
-        write_imem_word(5'd9, {6'b111111, 26'd0});               
+        write_imem_word(5'd9, {6'b111111, 26'd0});
     end
 endtask
 
@@ -281,9 +281,9 @@ endtask
 function automatic [7:0] compute_golden_byte(
     input integer r, input integer c,
     input bit use_relu,
-    ref logic [7:0]         act [0:3][0:3],  
-    ref logic [7:0]         wgt [0:3][0:3],  
-    ref logic signed [31:0] bias[0:3],        
+    ref logic [7:0]         act [0:3][0:3],
+    ref logic [7:0]         wgt [0:3][0:3],
+    ref logic signed [31:0] bias[0:3],
     input [31:0] m0,
     input [4:0]  shift
 );
@@ -419,7 +419,7 @@ initial begin
 
     gen_random_tile(-10, 10, test_act);
     gen_random_tile(-10, 10, test_wgt);
-    gen_random_bias(-2000, 2000, test_bias); 
+    gen_random_bias(-2000, 2000, test_bias);
     test_m0 = 32'd1; test_n_sc = 5'd0;
 
     write_tile_to_sram(ADDR_ACT,   test_act);
@@ -439,7 +439,7 @@ initial begin
 
     fill_tile(8'd0, test_act);
     fill_tile(8'd0, test_wgt);
-    fill_bias(32'd0, test_bias); 
+    fill_bias(32'd0, test_bias);
     test_m0 = 32'd1; test_n_sc = 5'd0;
 
     write_tile_to_sram(ADDR_ACT,   test_act);

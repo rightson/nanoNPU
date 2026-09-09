@@ -1,6 +1,6 @@
 {
   "run": "standalone-20260910-012100-744000",
-  "status": "failed hold; not accepted",
+  "status": "flow rejected: synchronous hold check on asynchronous UART first stage",
   "metrics": {
     "design__max_slew_violation__count__corner:nom_tt_025C_1v80": 0,
     "design__max_cap_violation__count__corner:nom_tt_025C_1v80": 0,
@@ -65,6 +65,10 @@
     "timing__hold__ws__corner:max_ff_n40C_1v95": 0.08348877381303554,
     "timing__setup__ws__corner:max_ff_n40C_1v95": 11.632265258045258,
     "timing__hold_vio__count__corner:max_ff_n40C_1v95": 0,
-    "timing__setup_vio__count__corner:max_ff_n40C_1v95": 0
+    "timing__setup_vio__count__corner:max_ff_n40C_1v95": 0,
+    "magic__drc_error__count": 0,
+    "klayout__drc_error__count": 0,
+    "design__lvs_error__count": 0,
+    "design__lvs_unmatched_pin__count": 0
   }
 }

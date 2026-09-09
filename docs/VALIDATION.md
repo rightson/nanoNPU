@@ -1,6 +1,45 @@
 # Validation record
 
-V0 milestone status: **not yet achieved**.
+V0 executable milestone status: **achieved**. Complete electrical signoff
+remains incomplete because of the residual limits reported below.
+
+Current clean-checkout run: `standalone-20260910-023402-179000`, source
+commit `ea60b61`, command `make check && make sim && make pnr`, exit **0**.
+It uses the standalone floorplan and precise UART asynchronous-input
+exception. Verified final results:
+
+| Check | Result |
+| --- | --- |
+| Runner checks | 8 passed |
+| RTL simulation | 9 cases × 2 seeds, 72/72 word comparisons |
+| Post-route STA | 9 corners; 0 setup and 0 hold violations |
+| Worst setup / hold slack | +7.7160 ns / +0.0986 ns |
+| Routing DRC / antenna / critical disconnected pins | 0 / 0 / 0 |
+| Magic DRC | 0 errors |
+| KLayout DRC | 0 errors |
+| Netgen LVS | 0 errors; device, net and pin comparisons passed |
+| Max capacitance / max slew / max fanout | 1 / 15 / 2 violations |
+
+LibreLane's default corner policy makes the max-slew/max-cap checks non-fatal;
+fanout violations are also reported in STA. This fork does not claim complete electrical signoff or
+CDC/MTBF validation. The fresh [STA summary](evidence/v0/sta-summary.rpt)
+and [input hashes](evidence/v0/input-manifest.json) are retained.
+The [electrical report](evidence/v0/electrical-violations.rpt) identifies
+`fanout8135`, a `buf_1` driven by `u_npu_sys.imem_wr_data[26]`, as the driver
+associated with the capacitance and slew violations. Two additional nets
+exceed the fanout limit. These are concrete follow-up closure items.
+
+The accepted bundle contains a newly generated **150,927,428-byte GDS**,
+three extracted SPEF files and the nine-corner STA summary. Artifact sizes
+and SHA-256 hashes are in [artifacts.json](evidence/v0/artifacts.json), alongside
+the [successful invocation receipt](evidence/v0/pnr-success.json),
+[provenance record](evidence/v0/provenance.json) and [LVS report](evidence/v0/lvs.rpt).
+The completed attempt was copied from the clean checkout to the implementation
+worktree's `build/attempts/standalone-20260910-023402-179000`; artifact and input
+hash verification passed again there. Only pinned dependency caches were
+preseeded in the clean checkout. Later changes are documentation/evidence and testbench trailing-whitespace
+normalization only; physical inputs and flow scripts are unchanged.
+`make sim` was rerun after formatting and again passed 72/72 comparisons.
 
 Environment: Apple Silicon macOS host, Docker 29.6.1 / Linux aarch64,
 8 container CPUs, 12,528,664,576 bytes container memory.
@@ -96,4 +135,5 @@ that the synchronizer's internal path remains timed. Its internal hold slack
 was +2.194736 ns and setup slack +46.063087 ns in that check. See
 [`evidence/uart-async-constraint-check.log`](evidence/uart-async-constraint-check.log).
 This establishes the exception's scope, not metastability MTBF or complete CDC
-signoff. A fresh complete flow is still required for the corrected constraints.
+signoff. The successful fresh flow recorded above validates the corrected
+constraints through the full V0 execution chain.

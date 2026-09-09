@@ -1,0 +1,33 @@
+{
+  "gds": [
+    {
+      "path": "build/attempts/standalone-20260910-023402-179000/runs/standalone-20260910-023402-179000/final/gds/npu_project_macro.gds",
+      "bytes": 150927428,
+      "sha256": "4397d284d75f0d8d2f91725154859ff445d9cad67a664f31a8ac71a9d4df0df0"
+    }
+  ],
+  "spef": [
+    {
+      "path": "build/attempts/standalone-20260910-023402-179000/runs/standalone-20260910-023402-179000/final/spef/max/npu_project_macro.max.spef",
+      "bytes": 84299803,
+      "sha256": "8373ecd782fcd15931022f080a89daed08db8bd995e0ab57367ebfa8a6b76e7c"
+    },
+    {
+      "path": "build/attempts/standalone-20260910-023402-179000/runs/standalone-20260910-023402-179000/final/spef/min/npu_project_macro.min.spef",
+      "bytes": 79626118,
+      "sha256": "432e8d16241e0311bb86ac681b9d07199f32cc99891e23bba800f4031cfbb967"
+    },
+    {
+      "path": "build/attempts/standalone-20260910-023402-179000/runs/standalone-20260910-023402-179000/final/spef/nom/npu_project_macro.nom.spef",
+      "bytes": 80770239,
+      "sha256": "3cfb38f7c4e70cbac8761e443bda33abbc41790c2f4cd2d44e4e28a552f85eff"
+    }
+  ],
+  "sta": [
+    {
+      "path": "build/attempts/standalone-20260910-023402-179000/runs/standalone-20260910-023402-179000/56-openroad-stapostpnr/summary.rpt",
+      "bytes": 3904,
+      "sha256": "cb1022206d9c34cc22b7181ce353ebdb500f499ef01f2cde59c49e83e7e14b95"
+    }
+  ]
+}
