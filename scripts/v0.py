@@ -94,14 +94,14 @@ def main():
         container(["bash", "-c", "set -e; librelane --version; verilator --version; yosys -V; openroad -version"])
     elif command == "setup":
         run(["docker", "pull", LOCK["image"]])
-        prepare()
+        prepare(standalone=True)
     elif command == "sim":
         run(["docker", "build", "-f", "Dockerfile.sim", "-t", LOCK["sim_image"], "."])
         container(["python3", "scripts/sim.py"], image=LOCK["sim_image"])
-    elif command in {"pnr", "pnr-standalone"}:
+    elif command in {"pnr", "pnr-standalone", "pnr-openframe"}:
         (BUILD / "pnr-success.json").unlink(missing_ok=True)
         (BUILD / "artifacts.json").unlink(missing_ok=True)
-        standalone = command == "pnr-standalone"
+        standalone = command != "pnr-openframe"
         tag = ("standalone-" if standalone else "v0-") + time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1000000:06d}"
         target = prepare(BUILD / "attempts" / tag, standalone=standalone)
         manifest = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()

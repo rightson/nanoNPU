@@ -1,4 +1,5 @@
 {
   "meta": {"flow": "Classic"},
-  "INSERT_ECO_BUFFERS": null
+  "INSERT_ECO_BUFFERS": null,
+  "STA_THREADS": 2
 }

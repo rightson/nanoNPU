@@ -41,6 +41,34 @@ CTS and initial global routing, reaching post-global-route repair. It was
 stopped because simulation had identified a functional bug; its physical
 checkpoints do not validate the corrected RTL.
 
-The corrected RTL is being rebuilt from a new input snapshot using the same
-SKY130 PDK and fixed die. Previous-run named ECO insertions are removed by
-explicit flow overrides. Final GDS/SPEF/STA and clean-checkout physical validation remain pending.
+The corrected RTL run `v0-20260910-000821-482000` uses a new input snapshot,
+the same SKY130 PDK and original fixed die. Previous-run named ECO insertions
+are removed by explicit flow overrides. OpenROAD terminated unexpectedly in
+its nineteenth detailed-routing iteration after about 80 minutes in that step.
+The last completed iteration had 781 violations. The log does not identify
+the cause. This run failed and produced no accepted GDS/SPEF/STA bundle.
+
+A clean detached checkout of `8c7c191` passed `make sim` (72/72), downloaded
+and verified its own DEF input, and reached detailed routing in `make pnr`
+(`v0-20260910-003243-665000`). This duplicate physical run was deliberately
+stopped with exit 143 when the three concurrent experiments approached the
+Docker VM memory limit. Its checkpoints are retained, but this is **not** a
+successful clean-checkout `make sim && make pnr` acceptance run.
+
+The separate `standalone-20260910-012100-744000` experiment enlarges the die
+to 1,750 × 1,750 µm. Placement reports 22.218% utilization, compared with
+76.223% for the original fixed die. Both configurations, and the clean
+checkout, produce the same synthesis netlist SHA-256, 50,042 cells and
+576,764.4128 µm² cell area. This confirms the floorplan comparison uses the
+same synthesized logic; it does not establish final physical equivalence
+or signoff. Detailed routing reached zero routing DRC. Its nine-corner
+post-route STA found no setup violations, but the input path from
+`gpio_bot_in[0]` has hold violations at the three slow PVT/extraction corners
+(worst −0.273445 ns). There are also one max-cap and 15 max-slew violations
+in the worst corner. These results do not satisfy the V0 acceptance gate.
+
+The standalone configuration is now the default `make pnr`, with
+post-global-route timing repair and 0.5 ns hold repair margin added. Original
+SDC timing requirements remain unchanged. `STA_THREADS=2` limits concurrent
+STA memory use. A new clean-checkout full run is required for this change.
+The original geometry remains available as `make pnr-openframe`.
