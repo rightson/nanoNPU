@@ -1,0 +1,32 @@
+
+============================================================
+  STARTING RANDOMIZED SYSTEM TESTS  (4x4 SA)
+============================================================
+
+[TC1] Full Pipeline (Mixed Random Data + RELU)
+
+[TC2] No ReLU Pipeline (Mixed Random Data)
+
+[TC3] Positive Data Only (No ReLU)
+
+[TC4] Negative Clamping Test (Mixed Data + RELU)
+
+[TC5] Zero Input Test
+
+[TC6] Positive Saturation (+127 Clipping)
+
+[TC7] Negative Saturation (-128 Clipping, No ReLU)
+
+[TC8] Zero Scale Multiplier (M0 = 0)
+
+[TC9] Extreme Right Shift (n_scale = 31)
+
+============================================================
+  FINAL RESULTS: 36 PASSED, 0 FAILED
+  *** SUCCESS: ALL TESTS PASSED ***
+============================================================
+
+- /work/verification/system/tb_npu_system_4x4.sv:540: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.044 2026-01-01
+- Verilator: $finish at 25ms; walltime 0.610 s; speed 41.845 ms/s
+- Verilator: cpu 0.608 s on 1 threads; alloced 8 MB

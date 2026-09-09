@@ -60,12 +60,23 @@ def prepare(target=None):
 def artifacts():
     receipt = json.loads((BUILD / "pnr-success.json").read_text())
     folder = ROOT / receipt["run_dir"]
+    snapshot = folder.parent.parent
+    for name, expected in receipt["input_manifest"].items():
+        actual = hashlib.sha256((snapshot / name).read_bytes()).hexdigest()
+        if actual != expected:
+            raise RuntimeError(f"Physical input changed after launch: {name}")
     found = {}
     for label, pattern in {"gds": "final/gds/*.gds", "spef": "final/spef/**/*.spef",
                            "sta": "*-openroad-stapostpnr*/summary.rpt"}.items():
         paths = sorted(p for p in folder.glob(pattern) if p.is_file() and p.stat().st_size)
         if not paths:
             raise RuntimeError(f"Missing fresh {label} artifacts in {folder}")
+        if label == "spef" and len(paths) != 3:
+            raise RuntimeError("Expected three extracted SPEF corners (min, nom, max)")
+        for path in paths:
+            with path.open("rb") as stream:
+                if stream.read(100).startswith(b"version https://git-lfs.github.com/spec/v1"):
+                    raise RuntimeError(f"LFS pointer is not a generated artifact: {path}")
         found[label] = [{"path": str(p.relative_to(ROOT)), "bytes": p.stat().st_size,
                          "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
     (BUILD / "artifacts.json").write_text(json.dumps(found, indent=2) + "\n")
@@ -85,6 +96,7 @@ def main():
         container(["python3", "scripts/sim.py"], image=LOCK["sim_image"])
     elif command == "pnr":
         (BUILD / "pnr-success.json").unlink(missing_ok=True)
+        (BUILD / "artifacts.json").unlink(missing_ok=True)
         tag = "v0-" + time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1000000:06d}"
         target = prepare(BUILD / "attempts" / tag)
         manifest = {str(p.relative_to(target)): hashlib.sha256(p.read_bytes()).hexdigest()

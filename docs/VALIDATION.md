@@ -25,8 +25,14 @@ does not provide `make` on PATH. `Dockerfile.sim` adds explicit build tools.
   the second CONV execution overwriting the first result.
 - One-shot CONV fix + fused-ISA testbench + control invariants:
   **seed 1: 36/36; seed 2: 36/36**. Golden arithmetic was not relaxed.
-- `make check`: four acceptance-check tests pass, including watchdog exits,
-  incomplete runs, stale concatenated summaries and nonzero simulator exits.
+- Clean detached checkout of `07c85d5`: `make check && make sim` passed;
+  each seed again passed 36/36 with no existing simulation build directory.
+- `make check`: eight acceptance-check tests pass. They cover watchdog exits,
+  incomplete runs, stale summaries, simulator crashes, missing extraction
+  corners, modified input snapshots and LFS pointers masquerading as outputs.
+
+Raw original and clean-checkout simulation transcripts are versioned in
+[`evidence/`](evidence/).
 
 ## Physical implementation
 
@@ -37,5 +43,4 @@ checkpoints do not validate the corrected RTL.
 
 The corrected RTL is being rebuilt from a new input snapshot using the same
 SKY130 PDK and fixed die. Previous-run named ECO insertions are removed by
-explicit flow overrides. Final GDS/SPEF/STA and clean-checkout validation
-remain pending.
+explicit flow overrides. Final GDS/SPEF/STA and clean-checkout physical validation remain pending.
