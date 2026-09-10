@@ -1,4 +1,54 @@
-# Local integration
+# Branch and worktree workflow
+
+`main` tracks the upstream baseline. `dev` is this fork's default branch and
+integration line. Feature branches start from `origin/dev` and return through
+PRs to `dev`. Do not merge this project's development work into `main`.
+
+Updating `main` does not update `dev` or existing feature branches. Upstream
+integration remains an explicit, tested operation; branch separation does not
+eliminate merge conflicts.
+
+## Start new work
+
+From a checkout of this repository, choose a new task name and sibling path:
+
+```sh
+git fetch origin dev
+git worktree add -b codex/task-name ../tiny-transformer-npu-task-name origin/dev
+```
+
+Replace `task-name` with the task's name. If either the branch or path exists,
+append a timestamp suffix. Work inside the new worktree, commit and validate,
+then publish:
+
+```sh
+git push -u origin HEAD
+gh pr create --repo rightson/tiny-transformer-npu --base dev
+```
+
+Keep `dev` at reviewed checkpoints; use tags to identify validated milestones.
+Until V0 PR #1 is merged, `dev` contains only the original upstream baseline.
+Tasks that depend on the V0 implementation should start after that merge.
+
+## Integrate upstream updates
+
+In the primary checkout, with a clean working directory on `main`:
+
+```sh
+git fetch origin
+git fetch upstream
+git merge --ff-only origin/main
+git merge --ff-only upstream/main
+git push origin main
+```
+
+Stop if either fast-forward fails and inspect the divergence; do not reset or
+force-push. From a feature worktree created from `origin/dev` as above, merge
+`origin/main`, resolve conflicts, run the checks appropriate to the changes,
+and open a PR to `dev`. RTL, constraints, or physical-flow changes may require
+a fresh simulation and RTL-to-GDS validation.
+
+## V0 integration
 
 Repository checkout:
 `/Users/rightson/.codex/.chatgpt-projects/g-p-6a8a8951e6308191bf99e7b706a96146/tiny-transformer-npu`
@@ -14,26 +64,30 @@ orchestration/acceptance checks, physical configuration overrides, and
 validation documentation. The complete file list is available with:
 
 ```sh
-git -C tiny-transformer-npu diff --name-only main...codex/v0-reproduce-20260909b
+git -C tiny-transformer-npu diff --name-only origin/dev...codex/v0-reproduce-20260909b
 ```
 
-Run these commands from the parent project directory. Integration is local;
-no remote repository or pull request has been created.
+V0 is published as [PR #1](https://github.com/rightson/tiny-transformer-npu/pull/1)
+with `dev` as its base. The branch was created from the same commit as `dev`,
+so this base change requires no rebase. When ready to merge the reviewed PR:
 
 ```sh
-git -C tiny-transformer-npu merge --ff-only codex/v0-reproduce-20260909b
+gh pr merge 1 --repo rightson/tiny-transformer-npu --merge
 ```
 
 Build outputs and the PDK cache are ignored and are not included by merging.
-Preserve any wanted outputs before cleanup, and stop active flows first.
-The nested clean physical checkout must be removed before its parent:
+Preserve wanted outputs before cleanup, stop active flows, and fetch the merged
+`origin/dev` first. Run the following from the parent project directory. Nested
+clean checkouts must be removed before their parent. These commands deliberately
+refuse to discard remaining files; inspect and archive them if Git refuses.
 
 ```sh
 v0_worktree="$PWD/tiny-transformer-npu-v0-20260909b"
-git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-physical-checkout"
-git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-standalone-checkout"
-git -C tiny-transformer-npu worktree remove --force "$v0_worktree/build/clean-uart-checkout"
-git -C tiny-transformer-npu worktree remove --force "$v0_worktree"
+git -C tiny-transformer-npu fetch origin dev
+git -C tiny-transformer-npu worktree remove "$v0_worktree/build/clean-physical-checkout"
+git -C tiny-transformer-npu worktree remove "$v0_worktree/build/clean-standalone-checkout"
+git -C tiny-transformer-npu worktree remove "$v0_worktree/build/clean-uart-checkout"
+git -C tiny-transformer-npu worktree remove "$v0_worktree"
 git -C tiny-transformer-npu branch -d codex/v0-reproduce-20260909b
 ```
 
@@ -46,6 +100,7 @@ Relative to the pinned upstream commit:
 ```text
 .dockerignore
 .gitignore
+AGENTS.md
 Backend/openlane/RTL/CU.SV
 Dockerfile.sim
 Makefile
