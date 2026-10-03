@@ -14,7 +14,7 @@ From a checkout of this repository, choose a new task name and sibling path:
 
 ```sh
 git fetch origin dev
-git worktree add -b codex/task-name ../tiny-transformer-npu-task-name origin/dev
+git worktree add -b codex/task-name ../nanoNPU-task-name origin/dev
 ```
 
 Replace `task-name` with the task's name. If either the branch or path exists,
@@ -23,7 +23,7 @@ then publish:
 
 ```sh
 git push -u origin HEAD
-gh pr create --repo rightson/tiny-transformer-npu --base dev
+gh pr create --repo rightson/nanoNPU --base dev
 ```
 
 Keep `dev` at reviewed checkpoints; use tags to identify validated milestones.
@@ -67,12 +67,12 @@ validation documentation. The complete file list is available with:
 git -C tiny-transformer-npu diff --name-only origin/dev...codex/v0-reproduce-20260909b
 ```
 
-V0 is published as [PR #1](https://github.com/rightson/tiny-transformer-npu/pull/1)
+V0 is published as [PR #1](https://github.com/rightson/nanoNPU/pull/1)
 with `dev` as its base. The branch was created from the same commit as `dev`,
 so this base change requires no rebase. When ready to merge the reviewed PR:
 
 ```sh
-gh pr merge 1 --repo rightson/tiny-transformer-npu --merge
+gh pr merge 1 --repo rightson/nanoNPU --merge
 ```
 
 Build outputs and the PDK cache are ignored and are not included by merging.

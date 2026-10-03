@@ -1,6 +1,6 @@
 # Repository workflow
 
-- `upstream` is `Ammar-Wahidi/NPU`; `origin` is `rightson/tiny-transformer-npu`.
+- `upstream` is `Ammar-Wahidi/NPU`; `origin` is `rightson/nanoNPU`.
 - `main` is reserved for upstream synchronization. Do not merge project feature
   branches or `dev` into `main`.
 - `dev` is the default branch and integration line for this fork. Target project
