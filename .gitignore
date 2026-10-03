@@ -1,4 +1,8 @@
 # OpenLane run outputs
+/.venv/
+/.cache/
+/build/
+__pycache__/
 Backend/openlane/runs/
 Backend/Old_openlane/runs/
 
@@ -18,4 +22,3 @@ Backend/openlane/synexp/
 Backend/Old_openlane/runs/
 Backend/Old_openlane/synexp/
 Backend/Old_openlane/synexp/
-

@@ -1,0 +1,4 @@
+FROM ghcr.io/librelane/librelane@sha256:ecabd075d0ddf6a2bd1cd4a32109c7dbb861ec007f7e4e423a9a081f8d23b8e2
+# Matches LibreLane 3.0.5's own nixpkgs revision.
+RUN mkdir -p /opt && nix --extra-experimental-features 'nix-command flakes' profile install --profile /opt/sim-tools github:NixOS/nixpkgs/b3aad468604d3e488d627c0b43984eb60e75e782#gnumake github:NixOS/nixpkgs/b3aad468604d3e488d627c0b43984eb60e75e782#gcc
+ENV PATH="/opt/sim-tools/bin:${PATH}"

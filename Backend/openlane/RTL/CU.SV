@@ -366,7 +366,9 @@ always_comb begin
     conv_cnt_en     = 1'b0;
     case (conv_phase)
         CP_IDLE: begin
-            if (opcode == CONV && state == EXECUTE)
+            // Launch once: CP_IDLE returns before the fused pipeline tail
+            // lets the main FSM leave EXECUTE.
+            if (opcode == CONV && state == EXECUTE && exec_pulse)
                 next_conv_phase = CP_START;
         end
         CP_START: next_conv_phase = CP_LOAD_W;

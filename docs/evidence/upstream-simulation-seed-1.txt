@@ -1,0 +1,40 @@
+
+============================================================
+  STARTING RANDOMIZED SYSTEM TESTS  (4x4 SA)
+============================================================
+
+[TC1] Full Pipeline (Mixed Random Data + RELU)
+  [FAIL] TC1 Row 1: Got 007f7f7f, Exp 00257a5e
+  [FAIL] TC1 Row 3: Got 707f7f7f, Exp 1c3a207f
+
+[TC2] No ReLU Pipeline (Mixed Random Data)
+  [FAIL] TC2 Row 1: Got 80807f7f, Exp d1e25911
+  [FAIL] TC2 Row 2: Got 80807f7f, Exp d496430e
+  [FAIL] TC2 Row 3: Got 8080807f, Exp 8bdbbb10
+
+[TC3] Positive Data Only (No ReLU)
+
+[TC4] Negative Clamping Test (Mixed Data + RELU)
+
+[TC5] Zero Input Test
+
+[TC6] Positive Saturation (+127 Clipping)
+
+[TC7] Negative Saturation (-128 Clipping, No ReLU)
+
+[TC8] Zero Scale Multiplier (M0 = 0)
+
+[TC9] Extreme Right Shift (n_scale = 31)
+  [FAIL] TC9 Row 1: Got 7f5580e8, Exp 0000ffff
+  [FAIL] TC9 Row 2: Got 7f7f807f, Exp 0000ff00
+  [FAIL] TC9 Row 3: Got 7f7f807f, Exp 0000ff00
+
+============================================================
+  FINAL RESULTS: 28 PASSED, 8 FAILED
+  *** ERROR: SILICON BUG DETECTED ***
+============================================================
+
+- /work/Testbench/tb_npu_system_4x4.sv:534: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.044 2026-01-01
+- Verilator: $finish at 25ms; walltime 0.599 s; speed 42.545 ms/s
+- Verilator: cpu 0.598 s on 1 threads; alloced 8 MB

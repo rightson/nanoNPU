@@ -1,0 +1,12 @@
+{
+  "source_commit": "ea60b61916f749ab68760b357e984bdbf3305eef",
+  "command": "make check && make sim && make pnr",
+  "observed_exit_code": 0,
+  "validation_checkout": "build/clean-uart-checkout",
+  "preseeded_dependencies": "Pinned Docker images and SKY130 PDK cache; no simulation or APR build outputs reused",
+  "artifact_copy": "Completed attempt copied to the implementation worktree; scripts/v0.py artifacts passed again after copying",
+  "later_changes": "Documentation/evidence and testbench trailing-whitespace normalization; physical RTL, SDC and flow scripts unchanged",
+  "electrical_signoff_complete": false,
+  "versioned_text_reports": "Trailing whitespace normalized; original reports remain in the completed build attempt",
+  "post_format_simulation": "make sim exited 0; two seeds, 72/72 word comparisons"
+}
